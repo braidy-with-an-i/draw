@@ -1,6 +1,8 @@
 const video = document.querySelector('.player');
-const canvas = document.querySelector('.photo');
-const ctx = canvas.getContext('2d');
+const videoLayer = document.querySelector('.photo');
+const paintLayer = document.querySelector('.draw')
+const ctx = videoLayer.getContext('2d');
+const ctx1 = paintLayer.getContext('2d')
 const strip = document.querySelector('.strip');
 const snap = document.querySelector('.snap');
 
@@ -21,8 +23,8 @@ function getVideo() {
 function paintToCanvas() {
   const width = video.videoWidth;
   const height = video.videoHeight;
-  canvas.width = width;
-  canvas.height = height;
+  videoLayer.width = width;
+  videoLayer.height = height;
   console.log(height, width)
 
 
@@ -33,10 +35,10 @@ function paintToCanvas() {
 
 getVideo()
 
-ctx.strokeStyle='#BADA55'
-ctx.lineJoin = 'round'
-ctx.lineCap = 'round'
-ctx.lineWidth = 100
+ctx1.strokeStyle='red'
+ctx1.lineJoin = 'round'
+ctx1.lineCap = 'round'
+ctx1.lineWidth = 10
 
 
 let isDrawing = false
@@ -45,24 +47,24 @@ let lastY = 0
 
 function draw(e) {
   if(!isDrawing) return
-  ctx.beginPath()
-  ctx.moveTo(lastX, lastY)
-  ctx.lineTo(e.offsetX, e.offsetY)
-  ctx.stroke()
+  ctx1.beginPath()
+  ctx1.moveTo(lastX, lastY)
+  ctx1.lineTo(e.offsetX, e.offsetY)
+  ctx1.stroke()
   lastX = e.offsetX
   lastY = e.offsetY
 }
 
 
 
-canvas.addEventListener('mousedown', (e) => {
+paintLayer.addEventListener('mousedown', (e) => {
   isDrawing = true
   [lastX, lastY] = [e.offsetX, e.offsetY]
 })
 
-canvas.addEventListener('mousemove', draw)
-canvas.addEventListener('mouseup', () => isDrawing = false)
-canvas.addEventListener('mouseout', () => isDrawing = false)
+paintLayer.addEventListener('mousemove', draw)
+paintLayer.addEventListener('mouseup', () => isDrawing = false)
+paintLayer.addEventListener('mouseout', () => isDrawing = false)
 
 
 video.addEventListener('canplay', paintToCanvas)
